@@ -1,5 +1,21 @@
 import Foundation
 
+/// 保真度層級（參見 docs/lossless-conversion.md §3）
+///
+/// 遵循資訊下沉原則（§3.4）：每個元素在能被表達的最低 Tier 表達。
+/// - Tier 1 (markdown): 純 Markdown，有損但可讀
+/// - Tier 2 (markdownWithFigures): + 圖片提取
+/// - Tier 3 (marker): MD + Figures + Metadata，bijective / lossless
+public enum FidelityTier: Int, Sendable, Comparable {
+    case markdown = 1
+    case markdownWithFigures = 2
+    case marker = 3
+
+    public static func < (lhs: FidelityTier, rhs: FidelityTier) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
+}
+
 /// 轉換選項
 public struct ConversionOptions: Sendable {
     /// 是否包含 YAML frontmatter
@@ -14,6 +30,18 @@ public struct ConversionOptions: Sendable {
     /// 標題樣式
     public var headingStyle: HeadingStyle
 
+    /// 保真度層級（預設 .markdown）
+    public var fidelity: FidelityTier
+
+    /// 是否啟用 HTML 擴展（Layer B: <u>, <sup>, <sub>, <mark>）
+    public var useHTMLExtensions: Bool
+
+    /// Tier 2+: 圖片輸出目錄
+    public var figuresDirectory: URL?
+
+    /// Tier 3: metadata sidecar 輸出路徑（.meta.yaml）
+    public var metadataOutput: URL?
+
     public static let `default` = ConversionOptions(
         includeFrontmatter: false,
         hardLineBreaks: false,
@@ -25,12 +53,20 @@ public struct ConversionOptions: Sendable {
         includeFrontmatter: Bool = false,
         hardLineBreaks: Bool = false,
         tableStyle: TableStyle = .pipe,
-        headingStyle: HeadingStyle = .atx
+        headingStyle: HeadingStyle = .atx,
+        fidelity: FidelityTier = .markdown,
+        useHTMLExtensions: Bool = false,
+        figuresDirectory: URL? = nil,
+        metadataOutput: URL? = nil
     ) {
         self.includeFrontmatter = includeFrontmatter
         self.hardLineBreaks = hardLineBreaks
         self.tableStyle = tableStyle
         self.headingStyle = headingStyle
+        self.fidelity = fidelity
+        self.useHTMLExtensions = useHTMLExtensions
+        self.figuresDirectory = figuresDirectory
+        self.metadataOutput = metadataOutput
     }
 
     /// 表格樣式
