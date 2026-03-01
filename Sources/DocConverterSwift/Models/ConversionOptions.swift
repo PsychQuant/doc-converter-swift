@@ -42,6 +42,12 @@ public struct ConversionOptions: Sendable {
     /// Tier 3: metadata sidecar 輸出路徑（.meta.yaml）
     public var metadataOutput: URL?
 
+    /// Practical Mode: 是否保留原始圖片格式（預設 false → 非 web-friendly 格式自動轉 PNG）
+    public var preserveOriginalFormat: Bool
+
+    /// Practical Mode: 是否啟用 heading heuristic 統計推斷（預設 true）
+    public var headingHeuristic: Bool
+
     public static let `default` = ConversionOptions(
         includeFrontmatter: false,
         hardLineBreaks: false,
@@ -57,7 +63,9 @@ public struct ConversionOptions: Sendable {
         fidelity: FidelityTier = .markdown,
         useHTMLExtensions: Bool = false,
         figuresDirectory: URL? = nil,
-        metadataOutput: URL? = nil
+        metadataOutput: URL? = nil,
+        preserveOriginalFormat: Bool = false,
+        headingHeuristic: Bool = true
     ) {
         self.includeFrontmatter = includeFrontmatter
         self.hardLineBreaks = hardLineBreaks
@@ -67,6 +75,8 @@ public struct ConversionOptions: Sendable {
         self.useHTMLExtensions = useHTMLExtensions
         self.figuresDirectory = figuresDirectory
         self.metadataOutput = metadataOutput
+        self.preserveOriginalFormat = preserveOriginalFormat
+        self.headingHeuristic = headingHeuristic
     }
 
     /// 表格樣式
