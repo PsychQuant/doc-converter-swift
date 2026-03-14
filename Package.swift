@@ -2,16 +2,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "DocConverterSwift",
+    name: "CommonConverterSwift",
     platforms: [.macOS(.v13)],
     products: [
-        .library(name: "DocConverterSwift", targets: ["DocConverterSwift"])
+        .library(name: "CommonConverterSwift", targets: ["CommonConverterSwift"])
     ],
     targets: [
-        .target(name: "DocConverterSwift"),
+        .target(name: "CommonConverterSwift"),
         .testTarget(
-            name: "DocConverterSwiftTests",
-            dependencies: ["DocConverterSwift"]
+            name: "CommonConverterSwiftTests",
+            dependencies: ["CommonConverterSwift"]
         )
     ]
 )
